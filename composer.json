@@ -1,0 +1,18 @@
+{
+    "name": "root/oos",
+    "authors": [
+        {
+            "name": "twn39",
+            "email": "twn39@163.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "League\\Flysystem\\AliyunOSS\\": "src/"
+        }
+    },
+    "require": {
+        "monster/aliyun-oss-sdk": "1.0.1",
+        "league/flysystem": "1.0.14"
+    }
+}
