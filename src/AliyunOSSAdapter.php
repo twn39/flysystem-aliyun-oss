@@ -26,6 +26,12 @@ class AliyunOSSAdapter extends AbstractAdapter
         return $this->bucket;
     }
 
+    private function getHeader($path)
+    {
+        $response = $this->aliyunClient->get_object_meta($this->bucket, $path);
+        return $response->header;
+    }
+
     /**
      * Write a new file.
      *
@@ -236,6 +242,9 @@ class AliyunOSSAdapter extends AbstractAdapter
     public function getMetadata($path)
     {
 
+        $response = $this->getHeader($path);
+        return $response;
+        // return $response->header['_info'];
     }
 
     /**
@@ -247,6 +256,11 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function getSize($path)
     {
+        $response = $this->getHeader($path);
+
+        return [
+            'size' => $response['content-length'],
+        ];
 
     }
 
@@ -259,6 +273,11 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function getMimetype($path)
     {
+        $response = $this->aliyunClient->get_object_meta($this->bucket, $path);
+
+        return [
+            'mimetype' => $response->header['_info']['content_type'],
+        ];
 
     }
 
@@ -271,7 +290,11 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function getTimestamp($path)
     {
+        $response = $this->getHeader($path);
 
+        return [
+            'timestamp' => $response['last-modified'],
+        ];
     }
 
     /**
