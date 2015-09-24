@@ -14,7 +14,8 @@
     },
     "require-dev": {
         "monster/aliyun-oss-sdk": "1.0.1",
-        "league/flysystem": "1.0.14"
+        "league/flysystem": "1.0.14",
+        "phpunit/phpunit": "4.8.9"
     },
     "license": "MIT"
 }
