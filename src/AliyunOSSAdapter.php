@@ -2,7 +2,6 @@
 namespace League\Flysystem\AliyunOSS;
 
 use League\Flysystem\Adapter\AbstractAdapter;
-use League\Flysystem\AdapterInterface;
 use League\Flysystem\Config;
 use League\Flysystem\Util;
 

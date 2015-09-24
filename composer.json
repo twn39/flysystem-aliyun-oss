@@ -1,5 +1,6 @@
 {
     "name": "monster/flysystem-aliyun-oss",
+    "description": "A aliyun oss adapter for flysystem.",
     "authors": [
         {
             "name": "twn39",
@@ -11,8 +12,9 @@
             "League\\Flysystem\\AliyunOSS\\": "src/"
         }
     },
-    "require": {
+    "require-dev": {
         "monster/aliyun-oss-sdk": "1.0.1",
         "league/flysystem": "1.0.14"
-    }
+    },
+    "license": "MIT"
 }

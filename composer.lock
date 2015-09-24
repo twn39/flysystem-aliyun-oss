@@ -4,9 +4,9 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1d1e0e99641a76a6329eea1b0c485c8e",
-    "content-hash": "b5f1f30113ffcd339168ceee0ef1bde2",
-    "packages": [
+    "hash": "b05886c7eb0367449a08e66dd1735b82",
+    "packages": [],
+    "packages-dev": [
         {
             "name": "league/flysystem",
             "version": "1.0.14",
@@ -134,7 +134,6 @@
             "time": "2015-09-22 06:38:26"
         }
     ],
-    "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": [],
