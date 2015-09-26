@@ -4,7 +4,6 @@ namespace League\Flysystem\AliyunOSS;
 
 use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\Config;
-use League\Flysystem\Util;
 
 class AliyunOSSAdapter extends AbstractAdapter
 {
@@ -25,11 +24,11 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     private function createBucket()
     {
-
         $oss = $this->aliyunClient;
         $bucket = $this->getBucket();
         $acl = \ALIOSS::OSS_ACL_TYPE_PUBLIC_READ;
         $oss->create_bucket($bucket, $acl);
+
         return true;
     }
 
@@ -43,6 +42,7 @@ class AliyunOSSAdapter extends AbstractAdapter
 
     /**
      * @param $path
+     *
      * @return array
      */
     private function getHeader($path)
@@ -94,8 +94,8 @@ class AliyunOSSAdapter extends AbstractAdapter
         if (is_resource($resource)) {
             fclose($resource);
         }
-        return true;
 
+        return true;
     }
 
     /**
@@ -149,8 +149,8 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function rename($path, $newPath)
     {
-        $options = array(
-        );
+        $options = [
+        ];
         $this->aliyunClient->copy_object($this->bucket, $path, $this->bucket, $newPath, $options);
 
         $this->aliyunClient->delete_object($this->bucket, $path);
@@ -168,9 +168,10 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function copy($path, $newPath)
     {
-        $options = array(
-        );
+        $options = [
+        ];
         $this->aliyunClient->copy_object($this->bucket, $path, $this->bucket, $newPath, $options);
+
         return true;
     }
 
@@ -278,7 +279,6 @@ class AliyunOSSAdapter extends AbstractAdapter
         return [
             'stream' => $handle,
         ];
-
     }
 
     /**
@@ -292,18 +292,17 @@ class AliyunOSSAdapter extends AbstractAdapter
     public function listContents($directory = '/', $recursive = false)
     {
         if ($recursive) {
-
         } else {
             $prefix = '';
             $delimiter = '/';
             $next_marker = '';
             $maxkeys = 1000;
-            $options = array(
+            $options = [
                 'delimiter' => $delimiter,
-                'prefix' => $prefix,
-                'max-keys' => $maxkeys,
-                'marker' => $next_marker,
-            );
+                'prefix'    => $prefix,
+                'max-keys'  => $maxkeys,
+                'marker'    => $next_marker,
+            ];
             $res = $this->aliyunClient->list_object($this->bucket, $options);
 
             if ($res->isOK()) {
@@ -317,9 +316,9 @@ class AliyunOSSAdapter extends AbstractAdapter
                 foreach ($xml->CommonPrefixes as $content) {
                     $paths[] = $content->Prefix;
                 }
+
                 return $paths;
             }
-
         }
     }
 
