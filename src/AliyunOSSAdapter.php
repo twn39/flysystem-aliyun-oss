@@ -4,6 +4,7 @@ namespace League\Flysystem\AliyunOSS;
 
 use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\Config;
+use League\Flysystem\Util;
 
 class AliyunOSSAdapter extends AbstractAdapter
 {
@@ -15,15 +16,35 @@ class AliyunOSSAdapter extends AbstractAdapter
         $this->aliyunClient = $client;
         $this->bucket = $bucket;
         $this->setPathPreFix($prefix);
-        $acl = \ALIOSS::OSS_ACL_TYPE_PUBLIC_READ;
-        $this->aliyunClient->create_bucket($this->bucket, $acl);
+        // note: sometimes the create bucket will fail, require test.
+        $this->createBucket();
     }
 
+    /**
+     * @return bool
+     */
+    private function createBucket()
+    {
+
+        $oss = $this->aliyunClient;
+        $bucket = $this->getBucket();
+        $acl = \ALIOSS::OSS_ACL_TYPE_PUBLIC_READ;
+        $oss->create_bucket($bucket, $acl);
+        return true;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getBucket()
     {
         return $this->bucket;
     }
 
+    /**
+     * @param $path
+     * @return array
+     */
     private function getHeader($path)
     {
         $response = $this->aliyunClient->get_object_meta($this->bucket, $path);
@@ -62,6 +83,19 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function writeStream($path, $resource, Config $config)
     {
+        $contents = stream_get_contents($resource);
+
+        $options = [
+            'content' => $contents,
+            'length'  => strlen($contents),
+        ];
+        $this->aliyunClient->upload_file_by_content($this->bucket, $path, $options);
+
+        if (is_resource($resource)) {
+            fclose($resource);
+        }
+        return true;
+
     }
 
     /**
@@ -95,30 +129,49 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function updateStream($path, $resource, Config $config)
     {
+        $contents = stream_get_contents($resource);
+        $options = [
+            'content' => $contents,
+            'length'  => strlen($contents),
+        ];
+        $this->aliyunClient->upload_file_by_content($this->bucket, $path, $options);
+
+        return true;
     }
 
     /**
      * Rename a file.
      *
      * @param string $path
-     * @param string $newpath
+     * @param string $newPath
      *
      * @return bool
      */
-    public function rename($path, $newpath)
+    public function rename($path, $newPath)
     {
+        $options = array(
+        );
+        $this->aliyunClient->copy_object($this->bucket, $path, $this->bucket, $newPath, $options);
+
+        $this->aliyunClient->delete_object($this->bucket, $path);
+
+        return true;
     }
 
     /**
      * Copy a file.
      *
      * @param string $path
-     * @param string $newpath
+     * @param string $newPath
      *
      * @return bool
      */
-    public function copy($path, $newpath)
+    public function copy($path, $newPath)
     {
+        $options = array(
+        );
+        $this->aliyunClient->copy_object($this->bucket, $path, $this->bucket, $newPath, $options);
+        return true;
     }
 
     /**
@@ -149,14 +202,14 @@ class AliyunOSSAdapter extends AbstractAdapter
     /**
      * Create a directory.
      *
-     * @param string $dirname directory name
+     * @param string $dirName directory name
      * @param Config $config
      *
      * @return array|false
      */
-    public function createDir($dirname, Config $config)
+    public function createDir($dirName, Config $config)
     {
-        $this->aliyunClient->create_object_dir($this->bucket, $dirname);
+        $this->aliyunClient->create_object_dir($this->bucket, $dirName);
 
         return true;
     }
@@ -200,6 +253,12 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function read($path)
     {
+        $options = [];
+        $res = $this->aliyunClient->get_object($this->bucket, $path, $options);
+
+        return [
+            'contents' => $res->body,
+        ];
     }
 
     /**
@@ -211,6 +270,15 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function readStream($path)
     {
+        $options = [];
+        $res = $this->aliyunClient->get_object($this->bucket, $path, $options);
+        $url = $res->header['oss-request-url'];
+        $handle = fopen($url, 'r');
+
+        return [
+            'stream' => $handle,
+        ];
+
     }
 
     /**
@@ -237,7 +305,6 @@ class AliyunOSSAdapter extends AbstractAdapter
         $response = $this->getHeader($path);
 
         return $response;
-        // return $response->header['_info'];
     }
 
     /**
