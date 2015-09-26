@@ -1,13 +1,12 @@
 <?php
+
 namespace League\Flysystem\AliyunOSS;
 
 use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\Config;
-use League\Flysystem\Util;
 
 class AliyunOSSAdapter extends AbstractAdapter
 {
-
     private $aliyunClient;
     private $bucket;
 
@@ -28,6 +27,7 @@ class AliyunOSSAdapter extends AbstractAdapter
     private function getHeader($path)
     {
         $response = $this->aliyunClient->get_object_meta($this->bucket, $path);
+
         return $response->header;
     }
 
@@ -42,11 +42,12 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function write($path, $contents, Config $config)
     {
-        $options = array(
+        $options = [
             'content' => $contents,
-            'length' => strlen($contents),
-        );
+            'length'  => strlen($contents),
+        ];
         $this->aliyunClient->upload_file_by_content($this->bucket, $path, $options);
+
         return true;
     }
 
@@ -61,7 +62,6 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function writeStream($path, $resource, Config $config)
     {
-
     }
 
     /**
@@ -75,13 +75,13 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function update($path, $contents, Config $config)
     {
-        $options = array(
+        $options = [
             'content' => $contents,
-            'length' => strlen($contents),
-        );
+            'length'  => strlen($contents),
+        ];
         $this->aliyunClient->upload_file_by_content($this->bucket, $path, $options);
-        return true;
 
+        return true;
     }
 
     /**
@@ -95,7 +95,6 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function updateStream($path, $resource, Config $config)
     {
-
     }
 
     /**
@@ -108,7 +107,6 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function rename($path, $newpath)
     {
-
     }
 
     /**
@@ -121,7 +119,6 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function copy($path, $newpath)
     {
-
     }
 
     /**
@@ -134,6 +131,7 @@ class AliyunOSSAdapter extends AbstractAdapter
     public function delete($path)
     {
         $this->aliyunClient->delete_object($this->bucket, $path);
+
         return true;
     }
 
@@ -146,7 +144,6 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function deleteDir($dirname)
     {
-
     }
 
     /**
@@ -160,6 +157,7 @@ class AliyunOSSAdapter extends AbstractAdapter
     public function createDir($dirname, Config $config)
     {
         $this->aliyunClient->create_object_dir($this->bucket, $dirname);
+
         return true;
     }
 
@@ -173,8 +171,8 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function setVisibility($path, $visibility)
     {
-
     }
+
     /**
      * Check whether a file exists.
      *
@@ -191,7 +189,6 @@ class AliyunOSSAdapter extends AbstractAdapter
         if ($response->status === 200) {
             return true;
         }
-
     }
 
     /**
@@ -203,7 +200,6 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function read($path)
     {
-
     }
 
     /**
@@ -215,7 +211,6 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function readStream($path)
     {
-
     }
 
     /**
@@ -228,7 +223,6 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function listContents($directory = '', $recursive = false)
     {
-
     }
 
     /**
@@ -240,8 +234,8 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function getMetadata($path)
     {
-
         $response = $this->getHeader($path);
+
         return $response;
         // return $response->header['_info'];
     }
@@ -260,7 +254,6 @@ class AliyunOSSAdapter extends AbstractAdapter
         return [
             'size' => $response['content-length'],
         ];
-
     }
 
     /**
@@ -277,7 +270,6 @@ class AliyunOSSAdapter extends AbstractAdapter
         return [
             'mimetype' => $response->header['_info']['content_type'],
         ];
-
     }
 
     /**
@@ -305,6 +297,5 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function getVisibility($path)
     {
-
     }
 }
