@@ -289,8 +289,38 @@ class AliyunOSSAdapter extends AbstractAdapter
      *
      * @return array
      */
-    public function listContents($directory = '', $recursive = false)
+    public function listContents($directory = '/', $recursive = false)
     {
+        if ($recursive) {
+
+        } else {
+            $prefix = '';
+            $delimiter = '/';
+            $next_marker = '';
+            $maxkeys = 1000;
+            $options = array(
+                'delimiter' => $delimiter,
+                'prefix' => $prefix,
+                'max-keys' => $maxkeys,
+                'marker' => $next_marker,
+            );
+            $res = $this->aliyunClient->list_object($this->bucket, $options);
+
+            if ($res->isOK()) {
+                $body = $res->body;
+                $xml = new \SimpleXMLElement($body);
+                // TODO: finish this work.
+                $paths = [];
+                foreach ($xml->Contents as $content) {
+                    $paths[] = $content->Key;
+                }
+                foreach ($xml->CommonPrefixes as $content) {
+                    $paths[] = $content->Prefix;
+                }
+                return $paths;
+            }
+
+        }
     }
 
     /**
