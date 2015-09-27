@@ -318,7 +318,7 @@ class AliyunOSSAdapter extends AbstractAdapter
             foreach ($xml->Contents as $content) {
                 $filePath = (string) $content->Key;
 
-                $type = (substr($filePath, -1) == '/') ? 'dir':'file';
+                $type = (substr($filePath, -1) == '/') ? 'dir' : 'file';
 
                 if ($type == 'dir') {
                     $paths[] = [
@@ -327,13 +327,12 @@ class AliyunOSSAdapter extends AbstractAdapter
                     ];
                 } else {
                     $paths[] = [
-                        'type' => $type,
-                        'path' => $filePath,
+                        'type'      => $type,
+                        'path'      => $filePath,
                         'timestamp' => strtotime($content->LastModified),
-                        'size' => (int) $content->Size,
+                        'size'      => (int) $content->Size,
                     ];
                 }
-
             }
             foreach ($xml->CommonPrefixes as $content) {
                 $paths[] = [
