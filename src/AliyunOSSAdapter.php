@@ -198,6 +198,7 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function deleteDir($dirname)
     {
+        return false;
     }
 
     /**
@@ -225,6 +226,7 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function setVisibility($path, $visibility)
     {
+        return false;
     }
 
     /**
@@ -289,36 +291,58 @@ class AliyunOSSAdapter extends AbstractAdapter
      *
      * @return array
      */
-    public function listContents($directory = '/', $recursive = false)
+    public function listContents($directory = '', $recursive = false)
     {
         if ($recursive) {
+            $delimiter = '';
         } else {
-            $prefix = '';
             $delimiter = '/';
-            $next_marker = '';
-            $maxkeys = 1000;
-            $options = [
-                'delimiter' => $delimiter,
-                'prefix'    => $prefix,
-                'max-keys'  => $maxkeys,
-                'marker'    => $next_marker,
-            ];
-            $res = $this->aliyunClient->list_object($this->bucket, $options);
+        }
 
-            if ($res->isOK()) {
-                $body = $res->body;
-                $xml = new \SimpleXMLElement($body);
-                // TODO: finish this work.
-                $paths = [];
-                foreach ($xml->Contents as $content) {
-                    $paths[] = $content->Key;
-                }
-                foreach ($xml->CommonPrefixes as $content) {
-                    $paths[] = $content->Prefix;
+        $prefix = $directory.'/';
+        $next_marker = '';
+        $maxkeys = 100;
+        $options = [
+            'delimiter' => $delimiter,
+            'prefix'    => $prefix,
+            'max-keys'  => $maxkeys,
+            'marker'    => $next_marker,
+        ];
+        $res = $this->aliyunClient->list_object($this->bucket, $options);
+
+        if ($res->isOK()) {
+            $body = $res->body;
+            $xml = new \SimpleXMLElement($body);
+
+            $paths = [];
+            foreach ($xml->Contents as $content) {
+                $filePath = (string) $content->Key;
+
+                $type = (substr($filePath, -1) == '/') ? 'dir':'file';
+
+                if ($type == 'dir') {
+                    $paths[] = [
+                        'type' => $type,
+                        'path' => $filePath,
+                    ];
+                } else {
+                    $paths[] = [
+                        'type' => $type,
+                        'path' => $filePath,
+                        'timestamp' => strtotime($content->LastModified),
+                        'size' => (int) $content->Size,
+                    ];
                 }
 
-                return $paths;
             }
+            foreach ($xml->CommonPrefixes as $content) {
+                $paths[] = [
+                    'type' => 'dir',
+                    'path' => (string) $content->Prefix,
+                ];
+            }
+
+            return $paths;
         }
     }
 
@@ -393,5 +417,6 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function getVisibility($path)
     {
+        return false;
     }
 }
