@@ -67,9 +67,14 @@ class AliyunOSSAdapter extends AbstractAdapter
             'content' => $contents,
             'length'  => strlen($contents),
         ];
-        $this->aliyunClient->upload_file_by_content($this->bucket, $path, $options);
+        $res = $this->aliyunClient->upload_file_by_content($this->bucket, $path, $options);
 
-        return true;
+        if ($res->isOK()) {
+            return $res->header;
+        } else {
+            return false;
+        }
+
     }
 
     /**

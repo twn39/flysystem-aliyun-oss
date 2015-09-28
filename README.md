@@ -6,9 +6,13 @@ A aliyun oss adapter for flysystem.
 
 **Note:** 因为阿里云的访问权限是在后台设置的，所以getVisibility和setVisibility总是返回false. SDK没有提供删除目录，所以deleteDir也总是返回false.
 
+SDK 可直接从阿里云下载，也可使用本人的`composer`包，对SDK未作任何改动。
+
 demo code:
 
-```
+```php
+<?php
+
 use League\Flysystem\Filesystem;
 use League\Flysystem\AliyunOSS\AliyunOSSAdapter;
 
@@ -20,3 +24,7 @@ $flysystem = new Filesystem($adapter);
 $flysystem->write('test.txt', 'this is test file content.');
 
 ```
+
+#### TODO：
+
+**单元测试**

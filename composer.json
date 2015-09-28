@@ -18,5 +18,8 @@
         "phpunit/phpunit": "4.8.9",
         "mockery/mockery": "dev-master"
     },
+    "suggest": {
+        "monster/aliyun-oss-sdk": "Aliyun OSS composer SDK, based on offical."
+    },
     "license": "MIT"
 }
