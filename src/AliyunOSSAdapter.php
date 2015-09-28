@@ -74,7 +74,6 @@ class AliyunOSSAdapter extends AbstractAdapter
         } else {
             return false;
         }
-
     }
 
     /**
