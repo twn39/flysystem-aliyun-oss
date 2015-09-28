@@ -5,3 +5,18 @@ A aliyun oss adapter for flysystem.
 [![Code Climate](https://codeclimate.com/github/twn39/flysystem-aliyun-oss/badges/gpa.svg)](https://codeclimate.com/github/twn39/flysystem-aliyun-oss)
 
 **Note:** 因为阿里云的访问权限是在后台设置的，所以getVisibility和setVisibility总是返回false. SDK没有提供删除目录，所以deleteDir也总是返回false.
+
+demo code:
+
+```
+use League\Flysystem\Filesystem;
+use League\Flysystem\AliyunOSS\AliyunOSSAdapter;
+
+$OSSClient = new \ALIOSS($accessKey, $accessSecret, $endPoint);
+
+$adapter = new AliyunOSSAdapter($OSSClient, 'files-bucket');
+$flysystem = new Filesystem($adapter);
+
+$flysystem->write('test.txt', 'this is test file content.');
+
+```
