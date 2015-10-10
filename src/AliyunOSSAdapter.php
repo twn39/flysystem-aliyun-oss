@@ -296,6 +296,47 @@ class AliyunOSSAdapter extends AbstractAdapter
     }
 
     /**
+     * parse the response body
+     *
+     * @param $body
+     *
+     * @return array
+     */
+    private function getContents($body)
+    {
+        $xml = new \SimpleXMLElement($body);
+
+        $paths = [];
+        foreach ($xml->Contents as $content) {
+            $filePath = (string) $content->Key;
+
+            $type = (substr($filePath, -1) == '/') ? 'dir' : 'file';
+
+            if ($type == 'dir') {
+                $paths[] = [
+                    'type' => $type,
+                    'path' => $filePath,
+                ];
+            } else {
+                $paths[] = [
+                    'type'      => $type,
+                    'path'      => $filePath,
+                    'timestamp' => strtotime($content->LastModified),
+                    'size'      => (int) $content->Size,
+                ];
+            }
+        }
+        foreach ($xml->CommonPrefixes as $content) {
+            $paths[] = [
+                'type' => 'dir',
+                'path' => (string) $content->Prefix,
+            ];
+        }
+
+        return $paths;
+    }
+
+    /**
      * List contents of a directory.
      *
      * @param string $directory
@@ -324,36 +365,7 @@ class AliyunOSSAdapter extends AbstractAdapter
 
         if ($res->isOK()) {
             $body = $res->body;
-            $xml = new \SimpleXMLElement($body);
-
-            $paths = [];
-            foreach ($xml->Contents as $content) {
-                $filePath = (string) $content->Key;
-
-                $type = (substr($filePath, -1) == '/') ? 'dir' : 'file';
-
-                if ($type == 'dir') {
-                    $paths[] = [
-                        'type' => $type,
-                        'path' => $filePath,
-                    ];
-                } else {
-                    $paths[] = [
-                        'type'      => $type,
-                        'path'      => $filePath,
-                        'timestamp' => strtotime($content->LastModified),
-                        'size'      => (int) $content->Size,
-                    ];
-                }
-            }
-            foreach ($xml->CommonPrefixes as $content) {
-                $paths[] = [
-                    'type' => 'dir',
-                    'path' => (string) $content->Prefix,
-                ];
-            }
-
-            return $paths;
+            return $this->getContents($body);
         }
     }
 
