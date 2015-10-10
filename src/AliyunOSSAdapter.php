@@ -27,7 +27,7 @@ class AliyunOSSAdapter extends AbstractAdapter
     }
 
     /**
-     * create the bucket
+     * create the bucket.
      *
      * @return bool
      */

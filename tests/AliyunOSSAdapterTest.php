@@ -1,8 +1,7 @@
 <?php
 
-use League\Flysystem\Config;
-use League\Flysystem\AliyunOSS\AliyunOSSAdapter;
 use \Mockery as m;
+use League\Flysystem\AliyunOSS\AliyunOSSAdapter;
 
 class AliyunOSSAdapterTest extends PHPUnit_Framework_TestCase
 {
@@ -15,7 +14,6 @@ class AliyunOSSAdapterTest extends PHPUnit_Framework_TestCase
         return $mock;
     }
 
-
     public function testInstantiable()
     {
         new AliyunOSSAdapter($this->getClientMock(), 'testBucket');
@@ -24,9 +22,9 @@ class AliyunOSSAdapterTest extends PHPUnit_Framework_TestCase
     public function adapterProvider()
     {
         $mock = $this->getClientMock();
+
         return [
             [new AliyunOSSAdapter($mock, 'testBucket'), $mock],
         ];
     }
-
 }
