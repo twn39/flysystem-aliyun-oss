@@ -9,25 +9,33 @@ class AliyunOSSAdapter extends AbstractAdapter
 {
     private $aliyunClient;
     private $bucket;
+    private $acl;
 
-    public function __construct(\ALIOSS $client, $bucket, $prefix = '')
+    /**
+     * @param \ALIOSS $client
+     * @param $bucket
+     * @param string $prefix
+     * @param string $acl
+     */
+    public function __construct(\ALIOSS $client, $bucket, $prefix = '', $acl = 'public-read')
     {
         $this->aliyunClient = $client;
         $this->bucket = $bucket;
         $this->setPathPreFix($prefix);
-        // note: sometimes the create bucket will fail, require test.
+        $this->acl = $acl;
         $this->createBucket();
     }
 
     /**
+     * create the bucket
+     *
      * @return bool
      */
     private function createBucket()
     {
         $oss = $this->aliyunClient;
         $bucket = $this->getBucket();
-        $acl = \ALIOSS::OSS_ACL_TYPE_PUBLIC_READ;
-        $oss->create_bucket($bucket, $acl);
+        $oss->create_bucket($bucket, $this->acl);
 
         return true;
     }
@@ -421,6 +429,8 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function getVisibility($path)
     {
-        return false;
+        return [
+            'visibility' => $this->acl,
+        ];
     }
 }
