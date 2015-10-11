@@ -4,8 +4,93 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "09fab9a48ba0f5ebe407634da9dd4680",
-    "packages": [],
+    "hash": "4cad6f814d7bfb5c9f8f167f6ee922c7",
+    "packages": [
+        {
+            "name": "league/flysystem",
+            "version": "1.0.15",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/flysystem.git",
+                "reference": "31525caf9e8772683672fefd8a1ca0c0736020f4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "http://packagist.phpcomposer.com/files/thephpleague/flysystem/31525caf9e8772683672fefd8a1ca0c0736020f4.zip",
+                "reference": "31525caf9e8772683672fefd8a1ca0c0736020f4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "conflict": {
+                "league/flysystem-sftp": "<1.0.6"
+            },
+            "require-dev": {
+                "ext-fileinfo": "*",
+                "mockery/mockery": "~0.9",
+                "phpspec/phpspec": "^2.2",
+                "phpspec/prophecy-phpunit": "~1.0",
+                "phpunit/phpunit": "~4.1"
+            },
+            "suggest": {
+                "ext-fileinfo": "Required for MimeType",
+                "league/flysystem-aws-s3-v2": "Allows you to use S3 storage with AWS SDK v2",
+                "league/flysystem-aws-s3-v3": "Allows you to use S3 storage with AWS SDK v3",
+                "league/flysystem-azure": "Allows you to use Windows Azure Blob storage",
+                "league/flysystem-cached-adapter": "Flysystem adapter decorator for metadata caching",
+                "league/flysystem-copy": "Allows you to use Copy.com storage",
+                "league/flysystem-dropbox": "Allows you to use Dropbox storage",
+                "league/flysystem-eventable-filesystem": "Allows you to use EventableFilesystem",
+                "league/flysystem-rackspace": "Allows you to use Rackspace Cloud Files",
+                "league/flysystem-sftp": "Allows you to use SFTP server storage via phpseclib",
+                "league/flysystem-webdav": "Allows you to use WebDAV storage",
+                "league/flysystem-ziparchive": "Allows you to use ZipArchive adapter"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Flysystem\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frenky.net"
+                }
+            ],
+            "description": "Filesystem abstraction: Many filesystems, one API.",
+            "keywords": [
+                "Cloud Files",
+                "WebDAV",
+                "abstraction",
+                "aws",
+                "cloud",
+                "copy.com",
+                "dropbox",
+                "file systems",
+                "files",
+                "filesystem",
+                "filesystems",
+                "ftp",
+                "rackspace",
+                "remote",
+                "s3",
+                "sftp",
+                "storage"
+            ],
+            "time": "2015-09-30 22:26:59"
+        }
+    ],
     "packages-dev": [
         {
             "name": "doctrine/instantiator",
@@ -107,101 +192,17 @@
             "time": "2015-05-11 14:41:42"
         },
         {
-            "name": "league/flysystem",
-            "version": "1.0.14",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "202c7775d959f377e2e302d93e7127c47604438a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "http://packagist.phpcomposer.com/files/thephpleague/flysystem/202c7775d959f377e2e302d93e7127c47604438a.zip",
-                "reference": "202c7775d959f377e2e302d93e7127c47604438a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "conflict": {
-                "league/flysystem-sftp": "<1.0.6"
-            },
-            "require-dev": {
-                "ext-fileinfo": "*",
-                "mockery/mockery": "~0.9",
-                "phpspec/phpspec": "^2.2",
-                "phpspec/prophecy-phpunit": "~1.0",
-                "phpunit/phpunit": "~4.1"
-            },
-            "suggest": {
-                "ext-fileinfo": "Required for MimeType",
-                "league/flysystem-aws-s3-v2": "Allows you to use S3 storage with AWS SDK v2",
-                "league/flysystem-aws-s3-v3": "Allows you to use S3 storage with AWS SDK v3",
-                "league/flysystem-azure": "Allows you to use Windows Azure Blob storage",
-                "league/flysystem-cached-adapter": "Flysystem adapter decorator for metadata caching",
-                "league/flysystem-copy": "Allows you to use Copy.com storage",
-                "league/flysystem-dropbox": "Allows you to use Dropbox storage",
-                "league/flysystem-eventable-filesystem": "Allows you to use EventableFilesystem",
-                "league/flysystem-rackspace": "Allows you to use Rackspace Cloud Files",
-                "league/flysystem-sftp": "Allows you to use SFTP server storage via phpseclib",
-                "league/flysystem-webdav": "Allows you to use WebDAV storage",
-                "league/flysystem-ziparchive": "Allows you to use ZipArchive adapter"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "League\\Flysystem\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Frank de Jonge",
-                    "email": "info@frenky.net"
-                }
-            ],
-            "description": "Filesystem abstraction: Many filesystems, one API.",
-            "keywords": [
-                "Cloud Files",
-                "WebDAV",
-                "abstraction",
-                "aws",
-                "cloud",
-                "copy.com",
-                "dropbox",
-                "file systems",
-                "files",
-                "filesystem",
-                "filesystems",
-                "ftp",
-                "rackspace",
-                "remote",
-                "s3",
-                "sftp",
-                "storage"
-            ],
-            "time": "2015-09-22 19:18:28"
-        },
-        {
             "name": "mockery/mockery",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/padraic/mockery.git",
-                "reference": "22b57c778cfd1fc46e14bff071c5126d9cd50820"
+                "reference": "bb19cd92e91aee51c344d8bd1a453dc85de47c21"
             },
             "dist": {
                 "type": "zip",
-                "url": "http://packagist.phpcomposer.com/files/padraic/mockery/22b57c778cfd1fc46e14bff071c5126d9cd50820.zip",
-                "reference": "22b57c778cfd1fc46e14bff071c5126d9cd50820",
+                "url": "http://packagist.phpcomposer.com/files/padraic/mockery/bb19cd92e91aee51c344d8bd1a453dc85de47c21.zip",
+                "reference": "bb19cd92e91aee51c344d8bd1a453dc85de47c21",
                 "shasum": ""
             },
             "require": {
@@ -253,7 +254,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2015-09-10 18:19:39"
+            "time": "2015-10-02 20:03:43"
         },
         {
             "name": "monster/aliyun-oss-sdk",
@@ -408,16 +409,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "2.2.3",
+            "version": "2.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "ef1ca6835468857944d5c3b48fa503d5554cff2f"
+                "reference": "eabf68b476ac7d0f73793aada060f1c1a9bf8979"
             },
             "dist": {
                 "type": "zip",
-                "url": "http://packagist.phpcomposer.com/files/sebastianbergmann/php-code-coverage/ef1ca6835468857944d5c3b48fa503d5554cff2f.zip",
-                "reference": "ef1ca6835468857944d5c3b48fa503d5554cff2f",
+                "url": "http://packagist.phpcomposer.com/files/sebastianbergmann/php-code-coverage/eabf68b476ac7d0f73793aada060f1c1a9bf8979.zip",
+                "reference": "eabf68b476ac7d0f73793aada060f1c1a9bf8979",
                 "shasum": ""
             },
             "require": {
@@ -466,7 +467,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-09-14 06:51:16"
+            "time": "2015-10-06 15:47:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -720,16 +721,16 @@
         },
         {
             "name": "phpunit/phpunit-mock-objects",
-            "version": "2.3.7",
+            "version": "2.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "5e2645ad49d196e020b85598d7c97e482725786a"
+                "reference": "ac8e7a3db35738d56ee9a76e78a4e03d97628983"
             },
             "dist": {
                 "type": "zip",
-                "url": "http://packagist.phpcomposer.com/files/sebastianbergmann/phpunit-mock-objects/5e2645ad49d196e020b85598d7c97e482725786a.zip",
-                "reference": "5e2645ad49d196e020b85598d7c97e482725786a",
+                "url": "http://packagist.phpcomposer.com/files/sebastianbergmann/phpunit-mock-objects/ac8e7a3db35738d56ee9a76e78a4e03d97628983.zip",
+                "reference": "ac8e7a3db35738d56ee9a76e78a4e03d97628983",
                 "shasum": ""
             },
             "require": {
@@ -772,7 +773,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2015-08-19 09:14:08"
+            "time": "2015-10-02 06:51:40"
         },
         {
             "name": "sebastian/comparator",
@@ -1008,16 +1009,16 @@
         },
         {
             "name": "sebastian/global-state",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/global-state.git",
-                "reference": "c7428acdb62ece0a45e6306f1ae85e1c05b09c01"
+                "reference": "23af31f402993cfd94e99cbc4b782e9a78eb0e97"
             },
             "dist": {
                 "type": "zip",
-                "url": "http://packagist.phpcomposer.com/files/sebastianbergmann/global-state/c7428acdb62ece0a45e6306f1ae85e1c05b09c01.zip",
-                "reference": "c7428acdb62ece0a45e6306f1ae85e1c05b09c01",
+                "url": "http://packagist.phpcomposer.com/files/sebastianbergmann/global-state/23af31f402993cfd94e99cbc4b782e9a78eb0e97.zip",
+                "reference": "23af31f402993cfd94e99cbc4b782e9a78eb0e97",
                 "shasum": ""
             },
             "require": {
@@ -1055,7 +1056,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2014-10-06 09:23:50"
+            "time": "2015-06-21 15:11:22"
         },
         {
             "name": "sebastian/recursion-context",

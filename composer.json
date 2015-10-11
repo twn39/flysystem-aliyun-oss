@@ -12,9 +12,12 @@
             "League\\Flysystem\\AliyunOSS\\": "src/"
         }
     },
+    "require": {
+        "php": ">=5.4.0",
+        "league/flysystem": "1.0.*"
+    },
     "require-dev": {
         "monster/aliyun-oss-sdk": "1.0.1",
-        "league/flysystem": "1.0.14",
         "phpunit/phpunit": "4.8.9",
         "mockery/mockery": "dev-master"
     },
