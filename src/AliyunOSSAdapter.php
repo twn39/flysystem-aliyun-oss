@@ -296,7 +296,7 @@ class AliyunOSSAdapter extends AbstractAdapter
     }
 
     /**
-     * parse the response body
+     * parse the response body.
      *
      * @param $body
      *
@@ -365,6 +365,7 @@ class AliyunOSSAdapter extends AbstractAdapter
 
         if ($res->isOK()) {
             $body = $res->body;
+
             return $this->getContents($body);
         }
     }
