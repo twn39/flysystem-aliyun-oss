@@ -97,12 +97,12 @@ class AliyunOSSAdapterSpec extends ObjectBehavior
 
     public function it_should_get_size()
     {
-        $this->getSize('world.txt')->shouldBeEqualTo('12');
+        $this->getSize('world.txt')->shouldHaveKey('size');
     }
 
     public function it_should_get_mime_type()
     {
-        $this->getMimeType('world.txt')->shouldBeEqualTo('text/plain');
+        $this->getMimeType('world.txt')->shouldHaveKey('mimetype');
     }
 
     public function it_should_get_timestamp()

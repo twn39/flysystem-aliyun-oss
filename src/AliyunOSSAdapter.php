@@ -18,6 +18,14 @@ class AliyunOSSAdapter extends AbstractAdapter
     }
 
     /**
+     * @return string
+     */
+    public function getBucket()
+    {
+        return $this->bucket;
+    }
+
+    /**
      * Write a new file.
      *
      * @param string $path
@@ -159,7 +167,7 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function setVisibility($path, $visibility)
     {
-        // TODO: Implement setVisibility() method.
+        return false;
     }
 
     /**
@@ -242,7 +250,9 @@ class AliyunOSSAdapter extends AbstractAdapter
     {
         $meta = $this->getMetadata($path);
 
-        return $meta['content-length'];
+        return [
+            'size' => $meta['content-length'],  
+        ];
     }
 
     /**
@@ -256,7 +266,9 @@ class AliyunOSSAdapter extends AbstractAdapter
     {
         $meta = $this->getMetadata($path);
 
-        return $meta['content-type'];
+        return [
+            'mimetype' => $meta['content-type'],
+        ];
     }
 
     /**
