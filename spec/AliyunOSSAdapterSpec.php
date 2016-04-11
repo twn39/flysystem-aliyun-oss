@@ -62,7 +62,7 @@ class AliyunOSSAdapterSpec extends ObjectBehavior
 
     public function it_should_write_stream()
     {
-        $this->writeStream('hello.csv', __DIR__.'/../test.csv', new Config())->shouldBe(true);
+        $this->writeStream('hello.png', __DIR__.'/../logo.png', new Config())->shouldBe(true);
     }
 
     public function it_should_copy_object()
@@ -77,7 +77,7 @@ class AliyunOSSAdapterSpec extends ObjectBehavior
 
     public function it_should_rename_object()
     {
-        $this->rename('hello.csv', 'world.csv')->shouldBe(true);
+        $this->rename('hello.png', 'logo.png')->shouldBe(true);
     }
 
     public function it_should_create_dir()
@@ -92,21 +92,22 @@ class AliyunOSSAdapterSpec extends ObjectBehavior
 
     public function it_should_get_object_meta()
     {
-        $this->getMetadata('world.txt')->shouldHaveKey('_info');
+        $this->getMetadata('logo.png')->shouldHaveKey('_info');
     }
 
     public function it_should_get_size()
     {
-        $this->getSize('world.txt')->shouldHaveKey('size');
+        $this->getSize('logo.png')->shouldHaveKey('size');
     }
 
     public function it_should_get_mime_type()
     {
-        $this->getMimeType('world.txt')->shouldHaveKey('mimetype');
+        $this->getMimeType('logo.png')->shouldHaveKeyWithValue('mimetype', 'image/png');
     }
 
     public function it_should_get_timestamp()
     {
-        $this->getTimestamp('world.txt')->shouldHaveType('DateTime');
+        $this->getTimestamp('logo.png')->shouldHaveType('DateTime');
     }
 }
+
