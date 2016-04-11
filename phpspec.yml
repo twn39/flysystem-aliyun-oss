@@ -1,0 +1,4 @@
+suites:
+    acme_suite:
+        namespace: League\Flysystem\AliyunOSS
+        psr4_prefix: League\Flysystem\AliyunOSS

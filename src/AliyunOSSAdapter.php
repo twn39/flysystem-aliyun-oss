@@ -4,60 +4,18 @@ namespace League\Flysystem\AliyunOSS;
 
 use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\Config;
+use OSS\Core\OssException;
+use OSS\OssClient;
 
 class AliyunOSSAdapter extends AbstractAdapter
 {
-    private $aliyunClient;
+    private $OSSClient;
     private $bucket;
-    private $acl;
-
-    /**
-     * @param \ALIOSS $client
-     * @param $bucket
-     * @param string $prefix
-     * @param string $acl
-     */
-    public function __construct(\ALIOSS $client, $bucket, $prefix = '', $acl = 'public-read')
+    
+    public function __construct(OssClient $ossClient, $bucket = 'bucket')
     {
-        $this->aliyunClient = $client;
+        $this->OSSClient = $ossClient;
         $this->bucket = $bucket;
-        $this->setPathPreFix($prefix);
-        $this->acl = $acl;
-        $this->createBucket();
-    }
-
-    /**
-     * create the bucket.
-     *
-     * @return bool
-     */
-    private function createBucket()
-    {
-        $oss = $this->aliyunClient;
-        $bucket = $this->getBucket();
-        $oss->create_bucket($bucket, $this->acl);
-
-        return true;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBucket()
-    {
-        return $this->bucket;
-    }
-
-    /**
-     * @param $path
-     *
-     * @return array
-     */
-    private function getHeader($path)
-    {
-        $response = $this->aliyunClient->get_object_meta($this->bucket, $path);
-
-        return $response->header;
     }
 
     /**
@@ -65,48 +23,30 @@ class AliyunOSSAdapter extends AbstractAdapter
      *
      * @param string $path
      * @param string $contents
-     * @param Config $config   Config object
+     * @param Config $config Config object
      *
      * @return array|false false on failure file meta data on success
      */
     public function write($path, $contents, Config $config)
     {
-        $options = [
-            'content' => $contents,
-            'length'  => strlen($contents),
-        ];
-        $res = $this->aliyunClient->upload_file_by_content($this->bucket, $path, $options);
-
-        if ($res->isOK()) {
-            return $res->header;
-        } else {
-            return false;
-        }
+        $this->OSSClient->putObject($this->bucket, $path, $contents);
+        
+        return true;
     }
 
     /**
      * Write a new file using a stream.
      *
-     * @param string   $path
+     * @param string $path
      * @param resource $resource
-     * @param Config   $config   Config object
+     * @param Config $config Config object
      *
      * @return array|false false on failure file meta data on success
      */
     public function writeStream($path, $resource, Config $config)
     {
-        $contents = stream_get_contents($resource);
-
-        $options = [
-            'content' => $contents,
-            'length'  => strlen($contents),
-        ];
-        $this->aliyunClient->upload_file_by_content($this->bucket, $path, $options);
-
-        if (is_resource($resource)) {
-            fclose($resource);
-        }
-
+        $this->OSSClient->uploadFile($this->bucket, $path, $resource);
+        
         return true;
     }
 
@@ -115,58 +55,42 @@ class AliyunOSSAdapter extends AbstractAdapter
      *
      * @param string $path
      * @param string $contents
-     * @param Config $config   Config object
+     * @param Config $config Config object
      *
      * @return array|false false on failure file meta data on success
      */
     public function update($path, $contents, Config $config)
     {
-        $options = [
-            'content' => $contents,
-            'length'  => strlen($contents),
-        ];
-        $this->aliyunClient->upload_file_by_content($this->bucket, $path, $options);
-
-        return true;
+        return $this->write($path, $contents, $config);
     }
 
     /**
      * Update a file using a stream.
      *
-     * @param string   $path
+     * @param string $path
      * @param resource $resource
-     * @param Config   $config   Config object
+     * @param Config $config Config object
      *
      * @return array|false false on failure file meta data on success
      */
     public function updateStream($path, $resource, Config $config)
     {
-        $contents = stream_get_contents($resource);
-        $options = [
-            'content' => $contents,
-            'length'  => strlen($contents),
-        ];
-        $this->aliyunClient->upload_file_by_content($this->bucket, $path, $options);
-
-        return true;
+        // TODO: Implement updateStream() method.
     }
 
     /**
      * Rename a file.
      *
      * @param string $path
-     * @param string $newPath
+     * @param string $newpath
      *
      * @return bool
      */
-    public function rename($path, $newPath)
+    public function rename($path, $newpath)
     {
-        $options = [
-        ];
-        $this->aliyunClient->copy_object($this->bucket, $path, $this->bucket, $newPath, $options);
-
-        $this->aliyunClient->delete_object($this->bucket, $path);
-
+        $this->copy($path, $newpath);
+        $this->delete($path);
+        
         return true;
     }
 
@@ -174,16 +98,14 @@ class AliyunOSSAdapter extends AbstractAdapter
      * Copy a file.
      *
      * @param string $path
-     * @param string $newPath
+     * @param string $newpath
      *
      * @return bool
      */
-    public function copy($path, $newPath)
+    public function copy($path, $newpath)
     {
-        $options = [
-        ];
-        $this->aliyunClient->copy_object($this->bucket, $path, $this->bucket, $newPath, $options);
-
+        $this->OSSClient->copyObject($this->bucket, $path, $this->bucket, $newpath);
+        
         return true;
     }
 
@@ -196,8 +118,8 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function delete($path)
     {
-        $this->aliyunClient->delete_object($this->bucket, $path);
-
+        $this->OSSClient->deleteObject($this->bucket, $path);
+        
         return true;
     }
 
@@ -216,15 +138,15 @@ class AliyunOSSAdapter extends AbstractAdapter
     /**
      * Create a directory.
      *
-     * @param string $dirName directory name
+     * @param string $dirname directory name
      * @param Config $config
      *
      * @return array|false
      */
-    public function createDir($dirName, Config $config)
+    public function createDir($dirname, Config $config)
     {
-        $this->aliyunClient->create_object_dir($this->bucket, $dirName);
-
+        $this->OSSClient->createObjectDir($this->bucket, $dirname);
+        
         return true;
     }
 
@@ -238,7 +160,7 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function setVisibility($path, $visibility)
     {
-        return false;
+        // TODO: Implement setVisibility() method.
     }
 
     /**
@@ -250,13 +172,9 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function has($path)
     {
-        $response = $this->aliyunClient->is_object_exist($this->bucket, $path);
-        if ($response->status === 404) {
-            return false;
-        }
-        if ($response->status === 200) {
-            return true;
-        }
+        $objectExist = $this->OSSClient->doesObjectExist($this->bucket, $path);
+        
+        return $objectExist;
     }
 
     /**
@@ -268,11 +186,10 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function read($path)
     {
-        $options = [];
-        $res = $this->aliyunClient->get_object($this->bucket, $path, $options);
-
+        $content = $this->OSSClient->getObject($this->bucket, $path);
+        
         return [
-            'contents' => $res->body,
+            'contents' => $content,
         ];
     }
 
@@ -285,89 +202,20 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function readStream($path)
     {
-        $options = [];
-        $res = $this->aliyunClient->get_object($this->bucket, $path, $options);
-        $url = $res->header['oss-request-url'];
-        $handle = fopen($url, 'r');
-
-        return [
-            'stream' => $handle,
-        ];
-    }
-
-    /**
-     * parse the response body.
-     *
-     * @param $body
-     *
-     * @return array
-     */
-    private function getContents($body)
-    {
-        $xml = new \SimpleXMLElement($body);
-
-        $paths = [];
-        foreach ($xml->Contents as $content) {
-            $filePath = (string) $content->Key;
-
-            $type = (substr($filePath, -1) == '/') ? 'dir' : 'file';
-
-            if ($type == 'dir') {
-                $paths[] = [
-                    'type' => $type,
-                    'path' => $filePath,
-                ];
-            } else {
-                $paths[] = [
-                    'type'      => $type,
-                    'path'      => $filePath,
-                    'timestamp' => strtotime($content->LastModified),
-                    'size'      => (int) $content->Size,
-                ];
-            }
-        }
-        foreach ($xml->CommonPrefixes as $content) {
-            $paths[] = [
-                'type' => 'dir',
-                'path' => (string) $content->Prefix,
-            ];
-        }
-
-        return $paths;
+        // TODO: Implement readStream() method.
     }
 
     /**
      * List contents of a directory.
      *
      * @param string $directory
-     * @param bool   $recursive
+     * @param bool $recursive
      *
      * @return array
      */
     public function listContents($directory = '', $recursive = false)
     {
-        if ($recursive) {
-            $delimiter = '';
-        } else {
-            $delimiter = '/';
-        }
-
-        $prefix = $directory.'/';
-        $next_marker = '';
-        $maxkeys = 100;
-        $options = [
-            'delimiter' => $delimiter,
-            'prefix'    => $prefix,
-            'max-keys'  => $maxkeys,
-            'marker'    => $next_marker,
-        ];
-        $res = $this->aliyunClient->list_object($this->bucket, $options);
-
-        if ($res->isOK()) {
-            $body = $res->body;
-
-            return $this->getContents($body);
-        }
+        // TODO: Implement listContents() method.
     }
 
     /**
@@ -379,9 +227,9 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function getMetadata($path)
     {
-        $response = $this->getHeader($path);
+        $meta = $this->OSSClient->getObjectMeta($this->bucket, $path);
 
-        return $response;
+        return $meta;
     }
 
     /**
@@ -393,11 +241,9 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function getSize($path)
     {
-        $response = $this->getHeader($path);
-
-        return [
-            'size' => $response['content-length'],
-        ];
+        $meta = $this->getMetadata($path);
+        
+        return $meta['content-length'];
     }
 
     /**
@@ -409,11 +255,9 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function getMimetype($path)
     {
-        $response = $this->aliyunClient->get_object_meta($this->bucket, $path);
+        $meta = $this->getMetadata($path);
 
-        return [
-            'mimetype' => $response->header['_info']['content_type'],
-        ];
+        return $meta['content-type'];
     }
 
     /**
@@ -425,11 +269,9 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function getTimestamp($path)
     {
-        $response = $this->getHeader($path);
-
-        return [
-            'timestamp' => $response['last-modified'],
-        ];
+        $meta = $this->getMetadata($path);
+        
+        return new \DateTime($meta['last-modified']);
     }
 
     /**
@@ -441,8 +283,6 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function getVisibility($path)
     {
-        return [
-            'visibility' => $this->acl,
-        ];
+        // TODO: Implement getVisibility() method.
     }
 }

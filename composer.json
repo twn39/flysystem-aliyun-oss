@@ -14,15 +14,12 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "league/flysystem": "1.0.*"
+        "league/flysystem": "1.0.*",
+        "aliyuncs/oss-sdk-php": "^2.0"
     },
     "require-dev": {
-        "monster/aliyun-oss-sdk": "1.0.1",
-        "phpunit/phpunit": "4.8.9",
-        "mockery/mockery": "dev-master"
-    },
-    "suggest": {
-        "monster/aliyun-oss-sdk": "Aliyun OSS composer SDK, based on offical."
+        "vlucas/phpdotenv": "^2.2",
+        "phpspec/phpspec": "^2.5"
     },
     "license": "MIT"
 }
