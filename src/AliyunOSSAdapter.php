@@ -251,7 +251,7 @@ class AliyunOSSAdapter extends AbstractAdapter
         $meta = $this->getMetadata($path);
 
         return [
-            'size' => $meta['content-length'],  
+            'size' => $meta['content-length'],
         ];
     }
 
