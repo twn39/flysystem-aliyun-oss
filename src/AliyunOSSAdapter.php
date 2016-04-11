@@ -4,14 +4,13 @@ namespace League\Flysystem\AliyunOSS;
 
 use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\Config;
-use OSS\Core\OssException;
 use OSS\OssClient;
 
 class AliyunOSSAdapter extends AbstractAdapter
 {
     private $OSSClient;
     private $bucket;
-    
+
     public function __construct(OssClient $ossClient, $bucket = 'bucket')
     {
         $this->OSSClient = $ossClient;
@@ -23,30 +22,30 @@ class AliyunOSSAdapter extends AbstractAdapter
      *
      * @param string $path
      * @param string $contents
-     * @param Config $config Config object
+     * @param Config $config   Config object
      *
      * @return array|false false on failure file meta data on success
      */
     public function write($path, $contents, Config $config)
     {
         $this->OSSClient->putObject($this->bucket, $path, $contents);
-        
+
         return true;
     }
 
     /**
      * Write a new file using a stream.
      *
-     * @param string $path
+     * @param string   $path
      * @param resource $resource
-     * @param Config $config Config object
+     * @param Config   $config   Config object
      *
      * @return array|false false on failure file meta data on success
      */
     public function writeStream($path, $resource, Config $config)
     {
         $this->OSSClient->uploadFile($this->bucket, $path, $resource);
-        
+
         return true;
     }
 
@@ -55,7 +54,7 @@ class AliyunOSSAdapter extends AbstractAdapter
      *
      * @param string $path
      * @param string $contents
-     * @param Config $config Config object
+     * @param Config $config   Config object
      *
      * @return array|false false on failure file meta data on success
      */
@@ -67,9 +66,9 @@ class AliyunOSSAdapter extends AbstractAdapter
     /**
      * Update a file using a stream.
      *
-     * @param string $path
+     * @param string   $path
      * @param resource $resource
-     * @param Config $config Config object
+     * @param Config   $config   Config object
      *
      * @return array|false false on failure file meta data on success
      */
@@ -90,7 +89,7 @@ class AliyunOSSAdapter extends AbstractAdapter
     {
         $this->copy($path, $newpath);
         $this->delete($path);
-        
+
         return true;
     }
 
@@ -105,7 +104,7 @@ class AliyunOSSAdapter extends AbstractAdapter
     public function copy($path, $newpath)
     {
         $this->OSSClient->copyObject($this->bucket, $path, $this->bucket, $newpath);
-        
+
         return true;
     }
 
@@ -119,7 +118,7 @@ class AliyunOSSAdapter extends AbstractAdapter
     public function delete($path)
     {
         $this->OSSClient->deleteObject($this->bucket, $path);
-        
+
         return true;
     }
 
@@ -146,7 +145,7 @@ class AliyunOSSAdapter extends AbstractAdapter
     public function createDir($dirname, Config $config)
     {
         $this->OSSClient->createObjectDir($this->bucket, $dirname);
-        
+
         return true;
     }
 
@@ -173,7 +172,7 @@ class AliyunOSSAdapter extends AbstractAdapter
     public function has($path)
     {
         $objectExist = $this->OSSClient->doesObjectExist($this->bucket, $path);
-        
+
         return $objectExist;
     }
 
@@ -187,7 +186,7 @@ class AliyunOSSAdapter extends AbstractAdapter
     public function read($path)
     {
         $content = $this->OSSClient->getObject($this->bucket, $path);
-        
+
         return [
             'contents' => $content,
         ];
@@ -209,7 +208,7 @@ class AliyunOSSAdapter extends AbstractAdapter
      * List contents of a directory.
      *
      * @param string $directory
-     * @param bool $recursive
+     * @param bool   $recursive
      *
      * @return array
      */
@@ -242,7 +241,7 @@ class AliyunOSSAdapter extends AbstractAdapter
     public function getSize($path)
     {
         $meta = $this->getMetadata($path);
-        
+
         return $meta['content-length'];
     }
 
@@ -270,7 +269,7 @@ class AliyunOSSAdapter extends AbstractAdapter
     public function getTimestamp($path)
     {
         $meta = $this->getMetadata($path);
-        
+
         return new \DateTime($meta['last-modified']);
     }
 
