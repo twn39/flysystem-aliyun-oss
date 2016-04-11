@@ -62,8 +62,8 @@ class AliyunOSSAdapterSpec extends ObjectBehavior
 
     public function it_should_write_stream()
     {
-        $imagePath = __DIR__ . '/../logo.png';
-        
+        $imagePath = __DIR__.'/../logo.png';
+
         $imageStream = fopen($imagePath, 'r+');
 
         $this->writeStream('hello.png', $imageStream, new Config())->shouldBe(true);
@@ -113,10 +113,9 @@ class AliyunOSSAdapterSpec extends ObjectBehavior
     {
         $this->getTimestamp('logo.png')->shouldHaveType('DateTime');
     }
-    
+
     public function it_should_read_stream()
     {
         $this->readStream('logo.png')->shouldHaveKey('stream');
     }
 }
-

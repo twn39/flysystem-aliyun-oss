@@ -54,7 +54,7 @@ class AliyunOSSAdapter extends AbstractAdapter
     {
         $contents = stream_get_contents($resource);
         $this->write($path, $contents, $config);
-        
+
         if (is_resource($resource)) {
             fclose($resource);
         }
@@ -87,7 +87,6 @@ class AliyunOSSAdapter extends AbstractAdapter
      */
     public function updateStream($path, $resource, Config $config)
     {
-        
     }
 
     /**
@@ -215,13 +214,13 @@ class AliyunOSSAdapter extends AbstractAdapter
     public function readStream($path)
     {
         $meta = $this->getMetadata($path);
-        
+
         $url = $meta['oss-request-url'];
-        
+
         $handle = fopen($url, 'r');
-        
+
         return [
-            'stream' => $handle,  
+            'stream' => $handle,
         ];
     }
 
@@ -308,7 +307,7 @@ class AliyunOSSAdapter extends AbstractAdapter
     public function getVisibility($path)
     {
         $acl = $this->OSSClient->getBucketAcl($this->bucket);
-        
+
         return $acl;
     }
 }
